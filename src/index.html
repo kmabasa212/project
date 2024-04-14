@@ -34,9 +34,24 @@
     <div id="user-info" style="display: none;">
         <h2>Welcome, <span id="user-name"></span></h2>
         <button id="sign-out">Sign Out</button>
+
+        <!-- Role-specific content -->
+        <div id="applicant-content" style="display: none;">
+            <h3>Applicant Section</h3>
+            <!-- Add content for applicants -->
+        </div>
+
+        <div id="fund-manager-content" style="display: none;">
+            <h3>Fund Manager Section</h3>
+            <!-- Add content for fund managers -->
+        </div>
+
+        <div id="platform-admin-content" style="display: none;">
+            <h3>Platform Admin Section</h3>
+            <!-- Add content for platform admins -->
+        </div>
     </div>
 
-    <!-- Script for Google Sign-In -->
     <script>
         function onSignIn(response) {
             if (response && response.credential) {
@@ -55,20 +70,24 @@
         }
 
         function handleUserRole(user) {
-            // Define user roles (applicant, fund manager, platform admin)
-            const roles = {
-                applicant: 'Applicant',
-                fundManager: 'Fund Manager',
-                platformAdmin: 'Platform Admin'
-            };
+            // Determine user role based on user information
+            let role;
 
-            // Example role handling
             if (user.email === 'admin@example.com') {
-                console.log(`Role: ${roles.platformAdmin}`);
+                role = 'platformAdmin';
             } else if (user.email.endsWith('@company.com')) {
-                console.log(`Role: ${roles.fundManager}`);
+                role = 'fundManager';
             } else {
-                console.log(`Role: ${roles.applicant}`);
+                role = 'applicant';
+            }
+
+            // Display content based on role
+            if (role === 'applicant') {
+                document.getElementById('applicant-content').style.display = 'block';
+            } else if (role === 'fundManager') {
+                document.getElementById('fund-manager-content').style.display = 'block';
+            } else if (role === 'platformAdmin') {
+                document.getElementById('platform-admin-content').style.display = 'block';
             }
         }
 
