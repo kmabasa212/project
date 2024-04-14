@@ -2,108 +2,104 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Funding Requests Management</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>KCDF</title>
+    <meta charset="utf-8">
+    <meta name="author" content="pixelhint.com">
+    <meta name="description" content="La casa free real state fully responsive html5/css3 home page website template" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/reset.css">
+    <link rel="stylesheet" type="text/css" href="login.css">
+    <link rel="stylesheet" type="text/css" href="css/responsive.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
 </head>
 
 <body>
-    <h1>Welcome to the Funding Requests Management App</h1>
 
-    <!-- Sign-In Button -->
-    <div id="g_id_onload"
-        data-client_id="YOUR_GOOGLE_CLIENT_ID"
-        data-context="signin"
-        data-ux_mode="popup"
-        data-callback="onSignIn"
-        data-auto_prompt="false">
-    </div>
-    <div class="g_id_signin"
-        data-type="standard"
-        data-shape="rectangular"
-        data-theme="outline"
-        data-text="sign_in_with"
-        data-size="large"
-        data-logo_alignment="left">
-    </div>
+    <section class="">
+        <!-- Include the header HTML file instead of a PHP include -->
+        <div id="header"></div>
+        <script>
+            // Load the header file asynchronously
+            fetch('header.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('header').innerHTML = html;
+                });
+        </script>
+    </section>
 
-    <!-- User Info -->
-    <div id="user-info" style="display: none;">
-        <h2>Welcome, <span id="user-name"></span></h2>
-        <button id="sign-out">Sign Out</button>
+    <section class="search">
+        <div class="wrapper">
+            <div class="header">
+                <h2>Student Login</h2>
+            </div>
+            <form id="loginForm">
+                <!-- Handle form errors here -->
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" name="UserName" id="UserName" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="Password" id="Password" required>
+                </div>
+                <div class="input-group">
+                    <button type="submit" class="btn" name="log">Login</button>
+                    <a href="index.html">
+                        <button type="button" class="btn" name="back">Back</button>
+                    </a>
+                </div>
+                <p>
+                    Not yet a member? <a href="register.html">Sign up</a>
+                </p>
+            </form>
 
-        <!-- Role-specific content -->
-        <div id="applicant-content" style="display: none;">
-            <h3>Applicant Section</h3>
-            <!-- Add content for applicants -->
+            <!-- Handle form submission with JavaScript -->
+            <script>
+                document.getElementById('loginForm').addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const username = document.getElementById('UserName').value;
+                    const password = document.getElementById('Password').value;
+
+                    // Replace with your API endpoint
+                    const apiEndpoint = 'your-api-endpoint';
+
+                    // Send a request to the server
+                    fetch(apiEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            UserName: username,
+                            Password: password
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Login Successful');
+                                window.location.href = 'status.html';
+                            } else {
+                                alert('Login Failed. Try Again');
+                                window.location.href = 'register.html';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            </script>
         </div>
+    </section>
 
-        <div id="fund-manager-content" style="display: none;">
-            <h3>Fund Manager Section</h3>
-            <!-- Add content for fund managers -->
+    <footer>
+        <div class="wrapper footer" align="center">
+            Copyright &copy; <script>document.write(new Date().getFullYear())</script> All Rights Reserved | Designed by William Wafula.
         </div>
+    </footer>
 
-        <div id="platform-admin-content" style="display: none;">
-            <h3>Platform Admin Section</h3>
-            <!-- Add content for platform admins -->
-        </div>
-    </div>
-
-    <script>
-        function onSignIn(response) {
-            if (response && response.credential) {
-                const user = parseJwt(response.credential);
-
-                // Display user information
-                document.getElementById('user-info').style.display = 'block';
-                document.getElementById('user-name').textContent = user.name;
-
-                // Hide sign-in button
-                document.querySelector('.g_id_signin').style.display = 'none';
-
-                // Handle user roles and permissions
-                handleUserRole(user);
-            }
-        }
-
-        function handleUserRole(user) {
-            // Determine user role based on user information
-            let role;
-
-            if (user.email === 'admin@example.com') {
-                role = 'platformAdmin';
-            } else if (user.email.endsWith('@company.com')) {
-                role = 'fundManager';
-            } else {
-                role = 'applicant';
-            }
-
-            // Display content based on role
-            if (role === 'applicant') {
-                document.getElementById('applicant-content').style.display = 'block';
-            } else if (role === 'fundManager') {
-                document.getElementById('fund-manager-content').style.display = 'block';
-            } else if (role === 'platformAdmin') {
-                document.getElementById('platform-admin-content').style.display = 'block';
-            }
-        }
-
-        function parseJwt(token) {
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace('-', '+').replace('_', '/');
-            return JSON.parse(window.atob(base64));
-        }
-
-        document.getElementById('sign-out').addEventListener('click', function() {
-            google.accounts.id.disableAutoSelect();
-            google.accounts.id.signOut();
-            document.getElementById('user-info').style.display = 'none';
-            document.querySelector('.g_id_signin').style.display = 'block';
-        });
-    </script>
 </body>
 
 </html>
