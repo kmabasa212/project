@@ -1,105 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <title>KCDF</title>
-    <meta charset="utf-8">
-    <meta name="author" content="pixelhint.com">
-    <meta name="description" content="La casa free real state fully responsive html5/css3 home page website template" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/reset.css">
+    <title>Bursary Applicant Form</title>
     <link rel="stylesheet" type="text/css" href="login.css">
-    <link rel="stylesheet" type="text/css" href="css/responsive.css">
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <style type="text/css">
+        h3 {
+            font-family: Calibri;
+            font-size: 22px;
+            font-style: normal;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            text-decoration: underline;
+        }
+
+        body {
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="header">
+        <h2>Sign Up</h2>
+    </div>
 
-    <section class="">
-        <!-- Include the header HTML file instead of a PHP include -->
-        <div id="header"></div>
-        <script>
-            // Load the header file asynchronously
-            fetch('header.html')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('header').innerHTML = html;
-                });
-        </script>
-    </section>
-
-    <section class="search">
-        <div class="wrapper">
-            <div class="header">
-                <h2>Student Login</h2>
-            </div>
-            <form id="loginForm">
-                <!-- Handle form errors here -->
-                <div class="input-group">
-                    <label>Username</label>
-                    <input type="text" name="UserName" id="UserName" required>
-                </div>
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" name="Password" id="Password" required>
-                </div>
-                <div class="input-group">
-                    <button type="submit" class="btn" name="log">Login</button>
-                    <a href="index.html">
-                        <button type="button" class="btn" name="back">Back</button>
-                    </a>
-                </div>
-                <p>
-                    Not yet a member? <a href="register.html">Sign up</a>
-                </p>
-            </form>
-
-            <!-- Handle form submission with JavaScript -->
-            <script>
-                document.getElementById('loginForm').addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    const username = document.getElementById('UserName').value;
-                    const password = document.getElementById('Password').value;
-
-                    // Replace with your API endpoint
-                    const apiEndpoint = 'your-api-endpoint';
-
-                    // Send a request to the server
-                    fetch(apiEndpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            UserName: username,
-                            Password: password
-                        })
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Login Successful');
-                                window.location.href = 'status.html';
-                            } else {
-                                alert('Login Failed. Try Again');
-                                window.location.href = 'register.html';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                });
-            </script>
+    <form id="signupForm">
+        <div class="input-group">
+            <label><strong>First Name</strong></label>
+            <input type="text" name="F_Name" placeholder="First name" maxlength="35" required />
         </div>
-    </section>
-
-    <footer>
-        <div class="wrapper footer" align="center">
-            Copyright &copy; <script>document.write(new Date().getFullYear())</script> All Rights Reserved | Designed by William Wafula.
+        <div class="input-group">
+            <label><strong>Last Name</strong></label>
+            <input type="text" name="L_Name" placeholder="Last name" maxlength="35" required />
         </div>
-    </footer>
+        <div class="input-group">
+            <label><strong>Username</strong></label>
+            <input type="text" name="U_Name" placeholder="Your username" maxlength="35" required />
+        </div>
+        <div class="input-group">
+            <label><strong>Password</strong></label>
+            <input type="password" name="P_Word" placeholder="Example: john23" maxlength="35" required />
+        </div>
+        <div class="input-group">
+            <label><strong>Confirm Password</strong></label>
+            <input type="password" name="C_Pword" placeholder="Match Password" maxlength="35" required />
+        </div>
+        <div class="input-group">
+            <button type="submit" class="btn" name="register">Register</button>
+            <button type="reset" name="button2" class="btn">Reset</button>
+            <a href="Login.html"><button type="button" class="btn" name="back">Back</button></a>
+        </div>
+        <p>
+            Already a member? <a href="login.html">Sign in</a>
+        </p>
+    </form>
 
+    <script>
+        // Handle form submission using JavaScript
+        document.getElementById('signupForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Retrieve form data
+            const formData = new FormData(this);
+            const data = {
+                F_Name: formData.get('F_Name'),
+                L_Name: formData.get('L_Name'),
+                U_Name: formData.get('U_Name'),
+                P_Word: formData.get('P_Word'),
+                C_Pword: formData.get('C_Pword')
+            };
+
+            // Validate password match
+            if (data.P_Word !== data.C_Pword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // API endpoint for form submission
+            const apiEndpoint = 'your-api-endpoint';
+
+            // Send form data to the server
+            fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('You have been successfully registered. Thank you!');
+                        window.location.href = 'login.html';
+                    } else {
+                        alert('Registration failed. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again later.');
+                });
+        });
+    </script>
 </body>
 
 </html>
