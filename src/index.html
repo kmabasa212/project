@@ -2,16 +2,89 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Vanilla JavaScript App</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funding Requests Management</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body>
-  <main>
-    <h1>Vanilla JavaScript App</h1>
-  </main>
+    <h1>Welcome to the Funding Requests Management App</h1>
+
+    <!-- Sign-In Button -->
+    <div id="g_id_onload"
+        data-client_id="YOUR_GOOGLE_CLIENT_ID"
+        data-context="signin"
+        data-ux_mode="popup"
+        data-callback="onSignIn"
+        data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+        data-type="standard"
+        data-shape="rectangular"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-size="large"
+        data-logo_alignment="left">
+    </div>
+
+    <!-- User Info -->
+    <div id="user-info" style="display: none;">
+        <h2>Welcome, <span id="user-name"></span></h2>
+        <button id="sign-out">Sign Out</button>
+    </div>
+
+    <!-- Script for Google Sign-In -->
+    <script>
+        function onSignIn(response) {
+            if (response && response.credential) {
+                const user = parseJwt(response.credential);
+
+                // Display user information
+                document.getElementById('user-info').style.display = 'block';
+                document.getElementById('user-name').textContent = user.name;
+
+                // Hide sign-in button
+                document.querySelector('.g_id_signin').style.display = 'none';
+
+                // Handle user roles and permissions
+                handleUserRole(user);
+            }
+        }
+
+        function handleUserRole(user) {
+            // Define user roles (applicant, fund manager, platform admin)
+            const roles = {
+                applicant: 'Applicant',
+                fundManager: 'Fund Manager',
+                platformAdmin: 'Platform Admin'
+            };
+
+            // Example role handling
+            if (user.email === 'admin@example.com') {
+                console.log(`Role: ${roles.platformAdmin}`);
+            } else if (user.email.endsWith('@company.com')) {
+                console.log(`Role: ${roles.fundManager}`);
+            } else {
+                console.log(`Role: ${roles.applicant}`);
+            }
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace('-', '+').replace('_', '/');
+            return JSON.parse(window.atob(base64));
+        }
+
+        document.getElementById('sign-out').addEventListener('click', function() {
+            google.accounts.id.disableAutoSelect();
+            google.accounts.id.signOut();
+            document.getElementById('user-info').style.display = 'none';
+            document.querySelector('.g_id_signin').style.display = 'block';
+        });
+    </script>
 </body>
 
 </html>
